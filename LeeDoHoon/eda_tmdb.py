@@ -849,7 +849,7 @@ print("\n[전체 장르별 소비량 (작품 수 기준)]")
 print("-" * 60)
 print(genre_df.to_string(index=False))
  
-# 장르별 소비량 표를 이미지로 저장
+# 1. 장르별 소비량 표를 이미지로 저장
 fig, ax = plt.subplots(figsize=(10, min(0.4 * len(genre_df), 20)))
 ax.axis('off')
 ax.axis('tight')
@@ -865,8 +865,99 @@ table.set_fontsize(9)
 table.scale(1, 1.2)
  
 plt.tight_layout()
-output_path = 'images/genre_consumption_overall.jpg'
+output_path = 'images/genre_consumption_table.jpg'
 plt.savefig(output_path, dpi=300, bbox_inches='tight')
 plt.close()
-print(f"\n장르별 소비량 표 이미지 저장: {output_path}")
+print(f"\n1. 장르별 소비량 표 이미지 저장: {output_path}")
+ 
+# 2. 장르별 소비량 막대 그래프 (상위 15개)
+top_15 = genre_df.head(15)
+fig, ax = plt.subplots(figsize=(14, 8))
+bars = ax.barh(range(len(top_15)), top_15['작품 수'], color='steelblue', edgecolor='black', alpha=0.7)
+ax.set_yticks(range(len(top_15)))
+ax.set_yticklabels(top_15['장르'], fontsize=10)
+ax.set_xlabel('작품 수', fontsize=12, fontweight='bold')
+ax.set_title('장르별 소비량 분석 (상위 15개 장르)', fontsize=16, fontweight='bold')
+ax.grid(axis='x', alpha=0.3)
+ 
+# 값 표시
+for i, v in enumerate(top_15['작품 수']):
+    ax.text(v, i, f' {v:,} ({top_15.iloc[i]["비율(%)"]:.1f}%)', 
+            va='center', fontsize=9, fontweight='bold')
+ 
+plt.tight_layout()
+output_path = 'images/genre_consumption_bar.jpg'
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"2. 장르별 소비량 막대 그래프 저장: {output_path}")
+ 
+# 3. 장르별 소비량 파이 차트 (상위 10개 + 기타)
+top_10 = genre_df.head(10)
+others_count = genre_df.iloc[10:]['작품 수'].sum()
+others_pct = (others_count / total_titles * 100).round(2)
+ 
+pie_data = list(top_10['작품 수']) + [others_count]
+pie_labels = list(top_10['장르']) + ['기타']
+pie_colors = plt.cm.Set3(range(len(pie_data)))
+ 
+fig, ax = plt.subplots(figsize=(12, 10))
+wedges, texts, autotexts = ax.pie(pie_data, labels=pie_labels, autopct='%1.1f%%',
+                                   colors=pie_colors, startangle=90, textprops={'fontsize': 10})
+ax.set_title('장르별 소비량 분포 (상위 10개 + 기타)', fontsize=16, fontweight='bold', pad=20)
+ 
+# 범례 추가
+ax.legend(wedges, [f'{label}: {data:,}개' for label, data in zip(pie_labels, pie_data)],
+          title="장르별 작품 수", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1), fontsize=9)
+ 
+plt.tight_layout()
+output_path = 'images/genre_consumption_pie.jpg'
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"3. 장르별 소비량 파이 차트 저장: {output_path}")
+ 
+# 4. 장르별 소비량 수평 막대 그래프 (전체)
+fig, ax = plt.subplots(figsize=(12, max(0.3 * len(genre_df), 8)))
+bars = ax.barh(range(len(genre_df)), genre_df['작품 수'], 
+                color=plt.cm.viridis(np.linspace(0, 1, len(genre_df))), 
+                edgecolor='black', alpha=0.7)
+ax.set_yticks(range(len(genre_df)))
+ax.set_yticklabels(genre_df['장르'], fontsize=9)
+ax.set_xlabel('작품 수', fontsize=12, fontweight='bold')
+ax.set_title('장르별 소비량 분석 (전체 장르)', fontsize=16, fontweight='bold')
+ax.grid(axis='x', alpha=0.3)
+ 
+# 값 표시 (상위 10개만)
+for i in range(min(10, len(genre_df))):
+    v = genre_df.iloc[i]['작품 수']
+    pct = genre_df.iloc[i]['비율(%)']
+    ax.text(v, i, f' {v:,} ({pct:.1f}%)', va='center', fontsize=8, fontweight='bold')
+ 
+plt.tight_layout()
+output_path = 'images/genre_consumption_all_bar.jpg'
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"4. 장르별 소비량 전체 막대 그래프 저장: {output_path}")
+ 
+# 5. 장르별 소비량 누적 막대 그래프 (비율 기준)
+top_10_pct = genre_df.head(10)
+fig, ax = plt.subplots(figsize=(14, 8))
+bars = ax.bar(range(len(top_10_pct)), top_10_pct['비율(%)'], 
+              color='coral', edgecolor='black', alpha=0.7)
+ax.set_xticks(range(len(top_10_pct)))
+ax.set_xticklabels(top_10_pct['장르'], rotation=45, ha='right', fontsize=10)
+ax.set_ylabel('비율 (%)', fontsize=12, fontweight='bold')
+ax.set_title('장르별 소비량 비율 분석 (상위 10개 장르)', fontsize=16, fontweight='bold')
+ax.grid(axis='y', alpha=0.3)
+ 
+# 값 표시
+for i, v in enumerate(top_10_pct['비율(%)']):
+    count = top_10_pct.iloc[i]['작품 수']
+    ax.text(i, v, f'{v:.1f}%\n({count:,}개)', 
+            ha='center', va='bottom', fontsize=9, fontweight='bold')
+ 
+plt.tight_layout()
+output_path = 'images/genre_consumption_ratio.jpg'
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"5. 장르별 소비량 비율 막대 그래프 저장: {output_path}")
  
