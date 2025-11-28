@@ -78,7 +78,7 @@ $$W = \frac{v}{v+m} \cdot R + \frac{m}{v+m} \cdot C$$
 ![OTT Comparison](./images/4_ott_comparison_bar.png)
 
 ### 4.6. 콘텐츠 유형 비교 (Movie vs TV)
-인기작은 TV 시리즈 비중이 높지만, **숨은 명작은 70% 이상이 영화(Movie)**로 구성되어 있습니다. 짧은 호흡으로 새로운 작품을 도전하고 싶은 사용자에게 적합합니다.
+인기작은 TV 시리즈 비중이 높지만, **숨은 명작은 70% 이상이 영화(Movie)** 로 구성되어 있습니다. 짧은 호흡으로 새로운 작품을 도전하고 싶은 사용자에게 적합합니다.
 ![Type Comparison](./images/5_type_comparison.png)
 
 ---
