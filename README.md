@@ -1,4 +1,4 @@
-# 🎬 OTT 시장의 숨은 명작 찾기 (TMDB Data Analysis)
+# 🎬 OTT 찐 명작 찾기 (TMDB Data Analysis)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
